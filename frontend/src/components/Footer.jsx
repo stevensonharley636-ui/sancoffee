@@ -8,10 +8,13 @@ export const Footer = () => {
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col md:flex-row items-start md:items-end justify-between gap-10">
         <div>
-          <p className="font-serif-display text-3xl tracking-tight" data-testid="footer-brand">
-            Green-Haus
-          </p>
-          <p className="mt-3 text-sm opacity-80 max-w-sm leading-relaxed">
+          <img
+            data-testid="footer-brand"
+            src="https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/zbmsvdz6_logo.png"
+            alt="Green-Haus"
+            className="h-20 w-auto object-contain"
+          />
+          <p className="mt-5 text-sm opacity-80 max-w-sm leading-relaxed">
             Direct-trade coffee. Fairer futures. Connecting women farmers in
             Rwanda and Burundi with Germany.
           </p>

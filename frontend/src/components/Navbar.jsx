@@ -27,9 +27,17 @@ export const Navbar = () => {
         <button
           data-testid="brand-logo"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="font-serif-display text-xl tracking-tight text-gh-primary"
+          className="flex items-center gap-3"
+          aria-label="Green-Haus home"
         >
-          Green-Haus
+          <img
+            src="https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/zbmsvdz6_logo.png"
+            alt="Green-Haus"
+            className="h-10 w-10 object-contain rounded-sm bg-gh-primary p-1"
+          />
+          <span className="font-serif-display text-xl tracking-tight text-gh-primary hidden sm:inline">
+            Green-Haus
+          </span>
         </button>
 
         <nav className="hidden md:flex items-center gap-10">

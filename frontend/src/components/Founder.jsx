@@ -10,23 +10,13 @@ export const Founder = () => {
       <div className="max-w-6xl mx-auto px-6 sm:px-8">
         <div className="bg-gh-secondary border border-gh-border grid grid-cols-1 md:grid-cols-5 gap-0 overflow-hidden">
           <div className="md:col-span-2 relative bg-[#d8cfc0] min-h-[360px]">
-            {/* Founder portrait placeholder — replace src below with uploaded portrait */}
-            <div
-              data-testid="founder-portrait-placeholder"
-              className="absolute inset-0 flex items-center justify-center text-center px-6"
-            >
-              <div className="border border-gh-primary/30 w-full h-full flex flex-col items-center justify-center p-8">
-                <div className="w-16 h-16 rounded-full border border-gh-primary/40 flex items-center justify-center font-serif-display text-2xl text-gh-primary">
-                  NA
-                </div>
-                <p className="mt-5 font-serif-display text-gh-primary text-lg">
-                  Founder portrait
-                </p>
-                <p className="mt-2 text-xs uppercase tracking-[0.2em] text-gh-accent">
-                  Will be uploaded here
-                </p>
-              </div>
-            </div>
+            <img
+              data-testid="founder-portrait"
+              src="https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/v1gwh2s0_Christian.jpg"
+              alt="Nsabemungu Christian Aime — Founder of Green-Haus"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
           </div>
 
           <div className="md:col-span-3 p-10 sm:p-14 flex flex-col justify-center">
