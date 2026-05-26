@@ -21,7 +21,7 @@ export const PRODUCTS = [
     description:
       "A heirloom Bourbon varietal, washed and sun-dried with care. Rich body, layered sweetness, soft floral lift.",
     image:
-      "https://images.openfoodfacts.org/images/products/200/000/011/1795/front_fr.6.full.jpg",
+      "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/d2v0v5ke_front_fr.6.400.jpg",
   },
   {
     id: "burundi-kayanza",
