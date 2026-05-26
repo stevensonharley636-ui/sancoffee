@@ -1,0 +1,162 @@
+{
+  "theme": "light",
+  "archetype": "1_organic_earthy",
+  "design_philosophy": {
+    "style": "Minimalist, premium, warm, natural",
+    "key_principles": [
+      "Generous white space (p-16 to p-32 padding)",
+      "Contrast between elegant serif headings and clean sans-serif body",
+      "Very light or no animations (static feel)",
+      "High-quality photography focus",
+      "Earthy palette reflecting nature and premium coffee quality"
+    ]
+  },
+  "colors": {
+    "primary": "#2D4A32", 
+    "secondary": "#E8E0D5", 
+    "accent": "#A67C52", 
+    "background": "#F9F8F6", 
+    "surface": "#FFFFFF", 
+    "text_primary": "#1A1A1A",
+    "text_secondary": "#595959",
+    "border": "#E5E1DA"
+  },
+  "typography": {
+    "heading_font": "Playfair Display",
+    "body_font": "Manrope",
+    "scales": {
+      "h1": "text-5xl sm:text-6xl md:text-7xl font-serif tracking-tight leading-[1.1] text-primary",
+      "h2": "text-3xl sm:text-4xl md:text-5xl font-serif tracking-tight leading-snug text-primary",
+      "h3": "text-xl sm:text-2xl font-serif tracking-tight text-primary",
+      "body": "text-base sm:text-lg font-sans leading-relaxed text-text_primary",
+      "label": "text-xs sm:text-sm font-sans uppercase tracking-[0.2em] text-accent"
+    }
+  },
+  "layout_spacing": {
+    "section_padding": "py-24 sm:py-32",
+    "container_max": "max-w-7xl mx-auto px-6 sm:px-8",
+    "gap_standard": "gap-8 md:gap-16",
+    "card_padding": "p-8 sm:p-12"
+  },
+  "components": {
+    "buttons": {
+      "primary": "inline-flex items-center justify-center font-sans tracking-wide bg-primary text-white px-8 py-4 hover:bg-primary/90 transition-colors duration-300",
+      "secondary": "inline-flex items-center justify-center font-sans tracking-wide bg-transparent text-primary border border-primary px-8 py-4 hover:bg-primary hover:text-white transition-colors duration-300"
+    },
+    "product_card": {
+      "style": "bg-surface border border-border flex flex-col p-6 sm:p-8 hover:-translate-y-1 transition-transform duration-300",
+      "image": "w-full aspect-[4/5] object-cover mb-6 rounded-sm",
+      "details": "flex flex-col gap-3 w-full text-center flex-grow",
+      "button": "mt-6 w-full py-3 border border-primary text-primary hover:bg-primary hover:text-white transition-colors font-sans text-sm tracking-widest uppercase"
+    },
+    "impact_card": {
+      "style": "flex flex-col p-8 sm:p-10 bg-secondary/30 border border-border rounded-sm h-full"
+    }
+  },
+  "sections": [
+    {
+      "name": "Hero",
+      "layout": "Min-h-[90vh] flex items-center relative overflow-hidden bg-background pt-20",
+      "instructions": "Use grid-cols-1 lg:grid-cols-2 gap-12 container mx-auto. Left side: overline label, main heading, subtext, 2 CTAs. Right side: A large, elegant vertical image of the Rwanda landscape or farming. Maintain breathing room."
+    },
+    {
+      "name": "About",
+      "layout": "py-24 sm:py-32 container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center",
+      "instructions": "Left: High quality image of women farmers. Right: 'OUR STORY' label, H2 heading, and 2-3 paragraphs of body text detailing the connection between Rwanda/Burundi farmers and the German market."
+    },
+    {
+      "name": "Products",
+      "layout": "py-24 sm:py-32 bg-secondary/10",
+      "instructions": "Container with a centered text header. A grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 layout for the 5 coffees. Each product needs: origin, roast, tasting notes, price, short desc, Request Quote button. The Request Quote button should scroll to the contact form or trigger mailto."
+    },
+    {
+      "name": "Founder",
+      "layout": "py-24 sm:py-32 container mx-auto",
+      "instructions": "Bento-style layout or a clean 2-column grid. Founder portrait image (Nsabemungu Christian Aime) paired with a quote and personal story. Use a subtle background color like #E8E0D5 (secondary) for the container."
+    },
+    {
+      "name": "Impact",
+      "layout": "py-24 sm:py-32 container mx-auto",
+      "instructions": "Centered header. Grid of 3 impact cards highlighting community, sustainability, and direct trade. Minimalist look using typography and high white space."
+    },
+    {
+      "name": "Contact",
+      "layout": "py-24 sm:py-32 bg-background border-t border-border container mx-auto grid grid-cols-1 md:grid-cols-2 gap-16",
+      "instructions": "Left: Minimalist contact form (Name, Email, Message, Submit). Right: Contact details (Lüneburg Germany, Email, Phone). Form should use Shadcn but styled with flat colors (no heavy shadows/radii)."
+    },
+    {
+      "name": "Footer",
+      "layout": "py-16 sm:py-24 bg-primary text-white",
+      "instructions": "Minimal layout. Brand logo (typography based), simple navigation links, and copyright."
+    }
+  ],
+  "image_urls": {
+    "hero": [
+      {
+        "url": "https://images.pexels.com/photos/31835038/pexels-photo-31835038.jpeg",
+        "description": "Stunning aerial landscape of vibrant green hills and terraced fields in Rwanda's countryside",
+        "category": "hero_background"
+      }
+    ],
+    "about": [
+      {
+        "url": "https://images.pexels.com/photos/34792534/pexels-photo-34792534.jpeg",
+        "description": "Smiling women picking coffee beans in a lush, verdant plantation.",
+        "category": "about_image"
+      }
+    ],
+    "products": [
+      {
+        "url": "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwzfHxjb2ZmZWUlMjBiZWFucyUyMG1pbmltYWxpc3R8ZW58MHx8fHwxNzc5Nzc3OTczfDA&ixlib=rb-4.1.0&q=85",
+        "description": "brown coffee beans on white ceramic bowl",
+        "category": "product_1"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4109751/pexels-photo-4109751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Flat lay of roasted coffee beans on a white background",
+        "category": "product_2"
+      },
+      {
+        "url": "https://images.pexels.com/photos/4109747/pexels-photo-4109747.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "A neat arrangement of coffee beans on a white background",
+        "category": "product_3"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1513530176992-0cf39c4cbed4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwyfHxjb2ZmZWUlMjBiZWFucyUyMG1pbmltYWxpc3R8ZW58MHx8fHwxNzc5Nzc3OTczfDA&ixlib=rb-4.1.0&q=85",
+        "description": "brown coffee bean lot",
+        "category": "product_4"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1675306408031-a9aad9f23308?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA1NzR8MHwxfHNlYXJjaHwxfHxjb2ZmZWUlMjBiZWFucyUyMG1pbmltYWxpc3R8ZW58MHx8fHwxNzc5Nzc3OTczfDA&ixlib=rb-4.1.0&q=85",
+        "description": "pile of coffee beans",
+        "category": "product_5"
+      }
+    ],
+    "founder": [
+      {
+        "url": "https://images.pexels.com/photos/19983408/pexels-photo-19983408.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "A black and white portrait of a man wearing a beanie outdoors",
+        "category": "founder_portrait"
+      }
+    ],
+    "impact": [
+      {
+        "url": "https://images.unsplash.com/photo-1597816760638-406d7271105c?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDJ8MHwxfHNlYXJjaHwyfHxhZnJpY2FuJTIwd29tZW4lMjBjb2ZmZWUlMjBmYXJtZXJzfGVufDB8fHx8MTc3OTc3Nzk3Mnww&ixlib=rb-4.1.0&q=85",
+        "description": "woman in green jacket standing near green plants",
+        "category": "impact_image"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Install 'lucide-react' for simple, minimal icons.",
+    "IMPORTANT: Do NOT use 'Inter', 'Roboto', or 'Open Sans' font. Use 'Playfair Display' for all headings and 'Manrope' for body text. Add these via Google Fonts in index.html or global css.",
+    "Do NOT add heavy animations. Keep transitions limited to hover states (buttons, cards).",
+    "Follow the generous spacing system strictly (e.g. py-24, py-32, gap-12, gap-16) to ensure a premium, uncrowded feel.",
+    "All interactive elements MUST have a data-testid attribute.",
+    "Use standard Tailwind utilities with HTML tags. Do not rely heavily on Shadcn 'Card' wrappers as they can restrict layout; build raw divs for layouts instead.",
+    "For the form, use Shadcn Form elements (Input, Textarea, Button), but heavily customize them to remove borders/shadows, keeping them flat and minimal with a 1px border using border-border color.",
+    "Product Cards: Image, Title, Origin, Roast, Tasting Notes, Price, Description, Request Quote CTA. Ensure consistent alignment inside cards.",
+    "Hero: Left align the content. The layout should look editorial and elegant. Use a solid background, no gradients.",
+    "Ensure color contrast meets standards. Forest green text on off-white, white text on forest green background."
+  ]
+}
