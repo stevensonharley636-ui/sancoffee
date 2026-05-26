@@ -21,7 +21,7 @@ export const PRODUCTS = [
     description:
       "A heirloom Bourbon varietal, washed and sun-dried with care. Rich body, layered sweetness, soft floral lift.",
     image:
-      "https://images.pexels.com/photos/4109751/pexels-photo-4109751.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=900",
+      "https://images.openfoodfacts.org/images/products/200/000/011/1795/front_fr.6.full.jpg",
   },
   {
     id: "burundi-kayanza",
@@ -33,7 +33,7 @@ export const PRODUCTS = [
     description:
       "Sourced from family farms across the Kayanza highlands. Round, syrupy and quietly elegant in the cup.",
     image:
-      "https://images.pexels.com/photos/4109747/pexels-photo-4109747.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=900&w=900",
+      "https://3africansisters.com/cdn/shop/files/Burndi1kg.jpg?v=1706367025&width=900",
   },
   {
     id: "burundi-ngozi",
@@ -45,7 +45,7 @@ export const PRODUCTS = [
     description:
       "From the cool slopes of Ngozi province. Bold, full-bodied and lingering — built for slow mornings.",
     image:
-      "https://images.unsplash.com/photo-1513530176992-0cf39c4cbed4?auto=format&fit=crop&w=900&q=80",
+      "https://eastafricancoffees.com/wp-content/uploads/2024/09/coffee-new-finall-44-%E5%89%AF%E6%9C%AC-480x528.jpg",
   },
   {
     id: "direct-trade-blend",
@@ -57,6 +57,6 @@ export const PRODUCTS = [
     description:
       "Our signature house blend — two countries, one cup. A balanced expression of East African terroir.",
     image:
-      "https://images.unsplash.com/photo-1675306408031-a9aad9f23308?auto=format&fit=crop&w=900&q=80",
+      "https://afrishopglobal.com/wp-content/uploads/2022/01/Ndabaga-ground-coffee.jpg",
   },
 ];
