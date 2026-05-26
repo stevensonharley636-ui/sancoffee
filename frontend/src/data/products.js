@@ -45,7 +45,7 @@ export const PRODUCTS = [
     description:
       "From the cool slopes of Ngozi province. Bold, full-bodied and lingering — built for slow mornings.",
     image:
-      "https://eastafricancoffees.com/wp-content/uploads/2024/09/coffee-new-finall-44-%E5%89%AF%E6%9C%AC-480x528.jpg",
+      "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/q71jlgpr_coffee-new-finall-44-%E5%89%AF%E6%9C%AC-932x1536.jpg",
   },
   {
     id: "direct-trade-blend",
