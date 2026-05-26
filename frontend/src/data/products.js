@@ -57,6 +57,6 @@ export const PRODUCTS = [
     description:
       "Our signature house blend — two countries, one cup. A balanced expression of East African terroir.",
     image:
-      "https://afrishopglobal.com/wp-content/uploads/2022/01/Ndabaga-ground-coffee.jpg",
+      "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/b4xwgvld_Ndabaga-ground-coffee.jpg",
   },
 ];
