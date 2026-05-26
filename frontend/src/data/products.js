@@ -33,7 +33,7 @@ export const PRODUCTS = [
     description:
       "Sourced from family farms across the Kayanza highlands. Round, syrupy and quietly elegant in the cup.",
     image:
-      "https://3africansisters.com/cdn/shop/files/Burndi1kg.jpg?v=1706367025&width=900",
+      "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/wc8att50_3AS_COFFEE_BUR_1KG.webp",
   },
   {
     id: "burundi-ngozi",
