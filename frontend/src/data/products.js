@@ -13,49 +13,49 @@ export const PRODUCTS = [
   },
   {
     id: "rwanda-bourbon",
-    name: "Rwanda Bourbon Specialty Coffee",
-    origin: "Rwanda",
+    name: "Burundi Ngoma Coffee — ARFIC",
+    origin: "Burundi",
     roast: "Medium-Dark Roast",
     notes: ["Chocolate", "Honey", "Floral"],
     price: 22,
     description:
-      "A heirloom Bourbon varietal, washed and sun-dried with care. Rich body, layered sweetness, soft floral lift.",
+      "Pure Arabica from the Burundian highlands, packaged by ARFIC. Rich body, layered sweetness and a quiet floral lift — 250g.",
     image:
       "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/d2v0v5ke_front_fr.6.400.jpg",
   },
   {
     id: "burundi-kayanza",
-    name: "Burundi Kayanza Arabica",
-    origin: "Burundi",
+    name: "3 African Sisters Burundi Single Origin",
+    origin: "Burundi · Kayanza",
     roast: "Medium Roast",
-    notes: ["Brown sugar", "Plum", "Cocoa"],
+    notes: ["Caramel", "Sweet citrus", "Berries"],
     price: 19,
     description:
-      "Sourced from family farms across the Kayanza highlands. Round, syrupy and quietly elegant in the cup.",
+      "100% Arabica from the Kayanza highlands of northern Burundi. Full-bodied, creamy caramel with bright acidity and delicate fruit — 1kg whole beans.",
     image:
       "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/wc8att50_3AS_COFFEE_BUR_1KG.webp",
   },
   {
     id: "burundi-ngozi",
-    name: "Burundi Ngozi Highland Coffee",
+    name: "EAC Speciality Arabica · Yellow Bourbon",
     origin: "Burundi",
-    roast: "Dark Roast",
+    roast: "Dark Roast · Ground",
     notes: ["Dark chocolate", "Spice", "Roasted nuts"],
     price: 21,
     description:
-      "From the cool slopes of Ngozi province. Bold, full-bodied and lingering — built for slow mornings.",
+      "Organic Yellow Bourbon from East African Coffees — bold, full-bodied and lingering. Ground dark roast, 250g, built for slow mornings and espresso.",
     image:
       "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/q71jlgpr_coffee-new-finall-44-%E5%89%AF%E6%9C%AC-932x1536.jpg",
   },
   {
     id: "direct-trade-blend",
-    name: "Rwanda & Burundi Direct-Trade Blend",
-    origin: "Rwanda & Burundi",
-    roast: "Signature Blend",
+    name: "Ndabaga Women's Coffee — Rwanda",
+    origin: "Rwanda",
+    roast: "Medium Roast",
     notes: ["Balanced fruit", "Caramel sweetness", "Smooth finish"],
     price: 24,
     description:
-      "Our signature house blend — two countries, one cup. A balanced expression of East African terroir.",
+      "Premium Arabica from the Ndabaga women's cooperative in Rwanda. Available as whole beans or ground — a balanced, traceable expression of East African terroir, 453g.",
     image:
       "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/b4xwgvld_Ndabaga-ground-coffee.jpg",
   },
