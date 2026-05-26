@@ -1,12 +1,14 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
+import asyncio
 import logging
+import resend
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
-from typing import List
+from pydantic import BaseModel, Field, ConfigDict, EmailStr
+from typing import Optional
 import uuid
 from datetime import datetime, timezone
 
@@ -19,54 +21,157 @@ mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
-# Create the main app without a prefix
-app = FastAPI()
+# Resend setup
+resend.api_key = os.environ.get('RESEND_API_KEY')
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'onboarding@resend.dev')
+RECIPIENT_EMAIL = os.environ.get('RECIPIENT_EMAIL', 'nsabemungu@gmail.com')
 
-# Create a router with the /api prefix
+# Create the main app
+app = FastAPI(title="Green-Haus API")
 api_router = APIRouter(prefix="/api")
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
-class StatusCheckCreate(BaseModel):
-    client_name: str
+# ------------------- Models -------------------
+class ContactRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str = Field(min_length=1, max_length=120)
+    email: EmailStr
+    message: str = Field(min_length=1, max_length=4000)
 
-# Add your routes to the router instead of directly to app
+
+class QuoteRequest(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    name: str = Field(min_length=1, max_length=120)
+    email: EmailStr
+    product_name: str = Field(min_length=1, max_length=200)
+    quantity: Optional[str] = Field(default=None, max_length=120)
+    message: Optional[str] = Field(default=None, max_length=4000)
+
+
+# ------------------- Helpers -------------------
+async def send_resend_email(subject: str, html: str, reply_to: Optional[str] = None) -> dict:
+    params = {
+        "from": SENDER_EMAIL,
+        "to": [RECIPIENT_EMAIL],
+        "subject": subject,
+        "html": html,
+    }
+    if reply_to:
+        params["reply_to"] = reply_to
+    try:
+        email = await asyncio.to_thread(resend.Emails.send, params)
+        return email if isinstance(email, dict) else {"id": getattr(email, "id", None)}
+    except Exception as e:
+        logger.error(f"Resend send failed: {e}")
+        raise
+
+
+def _escape(text: str) -> str:
+    return (
+        (text or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace("\n", "<br/>")
+    )
+
+
+# ------------------- Routes -------------------
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Green-Haus API is running"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.get("/health")
+async def health():
+    return {"status": "ok", "time": datetime.now(timezone.utc).isoformat()}
 
-# Include the router in the main app
+
+@api_router.post("/contact")
+async def submit_contact(payload: ContactRequest):
+    record = {
+        "id": str(uuid.uuid4()),
+        "type": "contact",
+        "name": payload.name,
+        "email": payload.email,
+        "message": payload.message,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.inquiries.insert_one(record)
+
+    subject = f"[Green-Haus] New contact message from {payload.name}"
+    html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background:#F9F8F6; color:#1A1A1A;">
+      <h2 style="color:#2D4A32; margin:0 0 16px 0;">New Contact Inquiry</h2>
+      <table cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%; font-size:14px;">
+        <tr><td style="font-weight:bold; width:120px;">Name</td><td>{_escape(payload.name)}</td></tr>
+        <tr><td style="font-weight:bold;">Email</td><td>{_escape(payload.email)}</td></tr>
+      </table>
+      <h3 style="color:#2D4A32; margin:24px 0 8px 0;">Message</h3>
+      <div style="background:#FFFFFF; border:1px solid #E5E1DA; padding:16px; font-size:14px; line-height:1.6;">
+        {_escape(payload.message)}
+      </div>
+      <p style="margin-top:24px; font-size:12px; color:#595959;">Sent via Green-Haus landing page.</p>
+    </div>
+    """
+    try:
+        result = await send_resend_email(subject, html, reply_to=payload.email)
+        await db.inquiries.update_one({"id": record["id"]}, {"$set": {"email_id": result.get("id"), "email_status": "sent"}})
+        return {"status": "success", "message": "Your message has been sent. We'll be in touch soon."}
+    except Exception as e:
+        await db.inquiries.update_one({"id": record["id"]}, {"$set": {"email_status": "failed", "email_error": str(e)}})
+        # Inquiry is safely stored in DB even if email delivery fails — don't block the user.
+        return {"status": "received", "message": "Thanks — your message has been received. We'll be in touch soon."}
+
+
+@api_router.post("/quote")
+async def submit_quote(payload: QuoteRequest):
+    record = {
+        "id": str(uuid.uuid4()),
+        "type": "quote",
+        "name": payload.name,
+        "email": payload.email,
+        "product_name": payload.product_name,
+        "quantity": payload.quantity,
+        "message": payload.message,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+    }
+    await db.inquiries.insert_one(record)
+
+    subject = f"[Green-Haus] Quote request: {payload.product_name}"
+    html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; background:#F9F8F6; color:#1A1A1A;">
+      <h2 style="color:#2D4A32; margin:0 0 16px 0;">New Quote Request</h2>
+      <table cellpadding="6" cellspacing="0" style="border-collapse:collapse; width:100%; font-size:14px;">
+        <tr><td style="font-weight:bold; width:140px;">Product</td><td>{_escape(payload.product_name)}</td></tr>
+        <tr><td style="font-weight:bold;">Name</td><td>{_escape(payload.name)}</td></tr>
+        <tr><td style="font-weight:bold;">Email</td><td>{_escape(payload.email)}</td></tr>
+        <tr><td style="font-weight:bold;">Quantity</td><td>{_escape(payload.quantity or '—')}</td></tr>
+      </table>
+      <h3 style="color:#2D4A32; margin:24px 0 8px 0;">Notes</h3>
+      <div style="background:#FFFFFF; border:1px solid #E5E1DA; padding:16px; font-size:14px; line-height:1.6;">
+        {_escape(payload.message or '—')}
+      </div>
+      <p style="margin-top:24px; font-size:12px; color:#595959;">Sent via Green-Haus landing page.</p>
+    </div>
+    """
+    try:
+        result = await send_resend_email(subject, html, reply_to=payload.email)
+        await db.inquiries.update_one({"id": record["id"]}, {"$set": {"email_id": result.get("id"), "email_status": "sent"}})
+        return {"status": "success", "message": "Your quote request has been received. We'll respond within 1–2 business days."}
+    except Exception as e:
+        await db.inquiries.update_one({"id": record["id"]}, {"$set": {"email_status": "failed", "email_error": str(e)}})
+        return {"status": "received", "message": "Thanks — your quote request has been received. We'll respond within 1–2 business days."}
+
+
+# Include the router
 app.include_router(api_router)
 
 app.add_middleware(
@@ -77,12 +182,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

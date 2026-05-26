@@ -1,38 +1,37 @@
-import { useEffect } from "react";
+import React from "react";
 import "@/App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import axios from "axios";
+import { Toaster } from "@/components/ui/sonner";
+import { Navbar } from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { About } from "@/components/About";
+import { Products } from "@/components/Products";
+import { Founder } from "@/components/Founder";
+import { Impact } from "@/components/Impact";
+import { Contact } from "@/components/Contact";
+import { Footer } from "@/components/Footer";
+import { QuoteDialog } from "@/components/QuoteDialog";
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
-
-const Home = () => {
-  const helloWorldApi = async () => {
-    try {
-      const response = await axios.get(`${API}/`);
-      console.log(response.data.message);
-    } catch (e) {
-      console.error(e, `errored out requesting / api`);
-    }
-  };
-
-  useEffect(() => {
-    helloWorldApi();
-  }, []);
+const Landing = () => {
+  const [quoteProduct, setQuoteProduct] = React.useState(null);
 
   return (
-    <div>
-      <header className="App-header">
-        <a
-          className="App-link"
-          href="https://emergent.sh"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img src="https://avatars.githubusercontent.com/in/1201222?s=120&u=2686cf91179bbafbc7a71bfbc43004cf9ae1acea&v=4" />
-        </a>
-        <p className="mt-5">Building something incredible ~!</p>
-      </header>
+    <div className="bg-gh-background min-h-screen">
+      <Navbar />
+      <main>
+        <Hero />
+        <About />
+        <Products onRequestQuote={(p) => setQuoteProduct(p)} />
+        <Founder />
+        <Impact />
+        <Contact />
+      </main>
+      <Footer />
+      <QuoteDialog
+        product={quoteProduct}
+        open={!!quoteProduct}
+        onClose={() => setQuoteProduct(null)}
+      />
     </div>
   );
 };
@@ -42,11 +41,10 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />}>
-            <Route index element={<Home />} />
-          </Route>
+          <Route path="/" element={<Landing />} />
         </Routes>
       </BrowserRouter>
+      <Toaster position="top-center" richColors />
     </div>
   );
 }
