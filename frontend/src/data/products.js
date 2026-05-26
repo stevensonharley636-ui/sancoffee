@@ -1,15 +1,15 @@
 export const PRODUCTS = [
   {
     id: "rwanda-womens-cooperative",
-    name: "Rwanda Women's Cooperative Arabica",
+    name: "SanCoffee Medium Roasted Beans 500g",
     origin: "Rwanda",
     roast: "Medium Roast",
     notes: ["Citrus", "Caramel", "Red berries"],
     price: 18,
     description:
-      "Hand-picked at high altitude by a women-led cooperative in the hills of Western Rwanda. Bright, juicy and gently sweet.",
+      "Hand-picked at high altitude by a women-led cooperative in the hills of Western Rwanda. Bright, juicy and gently sweet — 500g whole beans.",
     image:
-      "https://images.unsplash.com/photo-1587734195503-904fca47e0e9?auto=format&fit=crop&w=900&q=80",
+      "https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/v8bcs3m2_Sancoffee_500g_beans_medium_roasted_at_8000.jpeg",
   },
   {
     id: "rwanda-bourbon",
