@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogFooter,
 } from "../ui/dialog";
 import { Switch } from "../ui/switch";
@@ -175,6 +176,9 @@ export default function ProductsManager() {
             <DialogTitle className="font-serif-display text-gh-primary text-2xl">
               {editing?.id ? "Edit product" : "New product"}
             </DialogTitle>
+            <DialogDescription className="text-gh-soft text-sm">
+              Fill in the coffee details. Set "Published" off to keep it hidden from the public site.
+            </DialogDescription>
           </DialogHeader>
           {editing ? (
             <div className="space-y-4 py-2">

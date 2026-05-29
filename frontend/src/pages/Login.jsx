@@ -49,7 +49,7 @@ export default function Login() {
             <Lock size={20} strokeWidth={1.5} />
           </div>
           <h1 className="font-serif-display text-gh-primary text-3xl mt-6">
-            Editor Sign In
+            Dashboard Login
           </h1>
           <p className="text-gh-soft text-sm mt-2">
             Manage your Green-Haus website content.
