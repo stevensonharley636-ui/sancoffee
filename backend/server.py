@@ -1,25 +1,17 @@
 from fastapi import FastAPI, APIRouter, HTTPException
-from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
-from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import asyncio
 import logging
 import resend
-from pathlib import Path
 from pydantic import BaseModel, Field, ConfigDict, EmailStr
 from typing import Optional
 import uuid
 from datetime import datetime, timezone
 
-
-ROOT_DIR = Path(__file__).parent
-load_dotenv(ROOT_DIR / '.env')
-
-# MongoDB connection
-mongo_url = os.environ['MONGO_URL']
-client = AsyncIOMotorClient(mongo_url)
-db = client[os.environ['DB_NAME']]
+from database import db, client
+import auth
+import cms
 
 # Resend setup
 resend.api_key = os.environ.get('RESEND_API_KEY')
@@ -171,8 +163,11 @@ async def submit_quote(payload: QuoteRequest):
         return {"status": "received", "message": "Thanks — your quote request has been received. We'll respond within 1–2 business days."}
 
 
-# Include the router
+# Include the routers
 app.include_router(api_router)
+app.include_router(auth.router)
+app.include_router(cms.public_router)
+app.include_router(cms.admin_router)
 
 app.add_middleware(
     CORSMiddleware,
@@ -181,6 +176,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def startup():
+    await db.users.create_index("email", unique=True)
+    await auth.seed_admin()
+    await cms.seed_content_and_products()
+    logger.info("Startup seeding complete.")
 
 
 @app.on_event("shutdown")

@@ -2,10 +2,12 @@ import React from "react";
 import axios from "axios";
 import { Mail, MapPin, Phone, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useContent } from "../context/ContentContext";
 
 const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
 
 export const Contact = () => {
+  const { contact } = useContent();
   const [form, setForm] = React.useState({ name: "", email: "", message: "" });
   const [loading, setLoading] = React.useState(false);
 
@@ -39,40 +41,39 @@ export const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
         <div>
           <span className="label-overline" data-testid="contact-overline">
-            Get in touch
+            {contact.overline}
           </span>
           <h2
             data-testid="contact-heading"
             className="font-serif-display text-gh-primary text-4xl sm:text-5xl mt-4 leading-tight tracking-tight"
           >
-            Contact Green-Haus.
+            {contact.heading}
           </h2>
           <p className="mt-6 text-gh-soft text-base sm:text-lg leading-relaxed max-w-md">
-            For wholesale, partnerships or just a conversation about specialty
-            East African coffee — we'd love to hear from you.
+            {contact.intro}
           </p>
 
           <ul className="mt-10 space-y-6 text-sm sm:text-base">
             <li className="flex items-start gap-4" data-testid="contact-address">
               <MapPin size={18} className="mt-1 text-gh-primary" />
               <div>
-                <p className="text-gh-text">Lüneburg, 21337</p>
-                <p className="text-gh-soft">Germany</p>
+                <p className="text-gh-text">{contact.addressLine1}</p>
+                <p className="text-gh-soft">{contact.addressLine2}</p>
               </div>
             </li>
             <li className="flex items-start gap-4" data-testid="contact-phone">
               <Phone size={18} className="mt-1 text-gh-primary" />
-              <a href="tel:+4915214300152" className="text-gh-text hover:text-gh-primary">
-                (+49) 0152 143 001 52
+              <a href={`tel:${contact.phone}`} className="text-gh-text hover:text-gh-primary">
+                {contact.phoneDisplay}
               </a>
             </li>
             <li className="flex items-start gap-4" data-testid="contact-email">
               <Mail size={18} className="mt-1 text-gh-primary" />
               <a
-                href="mailto:nsabemungu@gmail.com"
+                href={`mailto:${contact.email}`}
                 className="text-gh-text hover:text-gh-primary break-all"
               >
-                nsabemungu@gmail.com
+                {contact.email}
               </a>
             </li>
           </ul>

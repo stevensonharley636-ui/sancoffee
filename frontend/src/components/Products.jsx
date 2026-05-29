@@ -1,6 +1,9 @@
 import React from "react";
-import { PRODUCTS } from "../data/products";
+import axios from "axios";
 import { ArrowRight } from "lucide-react";
+import { PRODUCTS } from "../data/products";
+import { useContent } from "../context/ContentContext";
+import { API } from "../lib/api";
 
 const formatEUR = (n) =>
   new Intl.NumberFormat("de-DE", {
@@ -10,6 +13,18 @@ const formatEUR = (n) =>
   }).format(n);
 
 export const Products = ({ onRequestQuote }) => {
+  const { products_section } = useContent();
+  const [items, setItems] = React.useState(PRODUCTS);
+
+  React.useEffect(() => {
+    axios
+      .get(`${API}/products`)
+      .then(({ data }) => {
+        if (Array.isArray(data) && data.length) setItems(data);
+      })
+      .catch(() => {});
+  }, []);
+
   return (
     <section
       id="products"
@@ -19,22 +34,21 @@ export const Products = ({ onRequestQuote }) => {
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="max-w-3xl">
           <span className="label-overline" data-testid="products-overline">
-            The Collection
+            {products_section.overline}
           </span>
           <h2
             data-testid="products-heading"
             className="font-serif-display text-gh-primary text-4xl sm:text-5xl mt-4 leading-tight tracking-tight"
           >
-            Five expressions of East African terroir.
+            {products_section.heading}
           </h2>
           <p className="mt-6 text-gh-soft text-base sm:text-lg leading-relaxed">
-            Each lot is traceable to the cooperative that grew it. Prices
-            shown are per 250g bag — wholesale inquiries welcome.
+            {products_section.intro}
           </p>
         </div>
 
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PRODUCTS.map((p) => (
+          {items.map((p) => (
             <article
               key={p.id}
               data-testid={`product-card-${p.id}`}
@@ -72,7 +86,7 @@ export const Products = ({ onRequestQuote }) => {
                 </p>
 
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {p.notes.map((n) => (
+                  {(p.notes || []).map((n) => (
                     <span
                       key={n}
                       className="text-xs px-3 py-1 border border-gh-border text-gh-soft"

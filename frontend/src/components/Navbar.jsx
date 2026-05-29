@@ -1,15 +1,9 @@
 import React from "react";
 import { Menu, X } from "lucide-react";
-
-const links = [
-  { id: "about", label: "Our Story" },
-  { id: "products", label: "Coffee" },
-  { id: "founder", label: "Founder" },
-  { id: "impact", label: "Impact" },
-  { id: "contact", label: "Contact" },
-];
+import { useContent } from "../context/ContentContext";
 
 export const Navbar = () => {
+  const { navLinks, settings } = useContent();
   const [open, setOpen] = React.useState(false);
 
   const scrollTo = (id) => {
@@ -28,20 +22,20 @@ export const Navbar = () => {
           data-testid="brand-logo"
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-3"
-          aria-label="Green-Haus home"
+          aria-label={`${settings.siteName} home`}
         >
           <img
-            src="https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/zbmsvdz6_logo.png"
-            alt="Green-Haus"
+            src={settings.logo}
+            alt={settings.siteName}
             className="h-10 w-10 object-contain rounded-sm bg-gh-primary p-1"
           />
           <span className="font-serif-display text-xl tracking-tight text-gh-primary hidden sm:inline">
-            Green-Haus
+            {settings.siteName}
           </span>
         </button>
 
         <nav className="hidden md:flex items-center gap-10">
-          {links.map((l) => (
+          {navLinks.map((l) => (
             <button
               key={l.id}
               data-testid={`nav-link-${l.id}`}
@@ -74,7 +68,7 @@ export const Navbar = () => {
       {open && (
         <div data-testid="mobile-menu" className="md:hidden bg-gh-background border-t border-gh-border">
           <div className="px-6 py-4 flex flex-col gap-4">
-            {links.map((l) => (
+            {navLinks.map((l) => (
               <button
                 key={l.id}
                 data-testid={`mobile-nav-link-${l.id}`}

@@ -1,6 +1,9 @@
 import React from "react";
+import { useContent } from "../context/ContentContext";
 
 export const Footer = () => {
+  const { settings } = useContent();
+
   return (
     <footer
       data-testid="site-footer"
@@ -10,18 +13,17 @@ export const Footer = () => {
         <div>
           <img
             data-testid="footer-brand"
-            src="https://customer-assets.emergentagent.com/job_direct-trade-5/artifacts/zbmsvdz6_logo.png"
-            alt="Green-Haus"
+            src={settings.logo}
+            alt={settings.siteName}
             className="h-20 w-auto object-contain"
           />
           <p className="mt-5 text-sm opacity-80 max-w-sm leading-relaxed">
-            Direct-trade coffee. Fairer futures. Connecting women farmers in
-            Rwanda and Burundi with Germany.
+            {settings.footerDescription}
           </p>
         </div>
         <div className="text-sm opacity-80 space-y-1 md:text-right">
-          <p data-testid="footer-tagline">Direct-trade coffee. Fairer futures.</p>
-          <p data-testid="footer-copyright">Green-Haus © 2026</p>
+          <p data-testid="footer-tagline">{settings.footerTagline}</p>
+          <p data-testid="footer-copyright">{settings.copyright}</p>
         </div>
       </div>
     </footer>
