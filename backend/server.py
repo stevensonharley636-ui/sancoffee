@@ -181,6 +181,8 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup():
     await db.users.create_index("email", unique=True)
+    await db.password_reset_tokens.create_index("token")
+    await db.password_reset_tokens.create_index("expires_at", expireAfterSeconds=0)
     await auth.seed_admin()
     await cms.seed_content_and_products()
     logger.info("Startup seeding complete.")

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Loader2, Lock } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "../context/AuthContext";
+import ForgotPasswordDialog from "../components/ForgotPasswordDialog";
 
 function formatApiErrorDetail(detail) {
   if (detail == null) return "Something went wrong. Please try again.";
@@ -22,6 +23,7 @@ export default function Login() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const [forgotOpen, setForgotOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (user) navigate("/dashboard", { replace: true });
@@ -100,8 +102,19 @@ export default function Login() {
                 "Sign in"
               )}
             </button>
+
+            <button
+              type="button"
+              data-testid="forgot-password-link"
+              onClick={() => setForgotOpen(true)}
+              className="w-full text-center text-xs text-gh-soft hover:text-gh-primary transition-colors"
+            >
+              Forgot password?
+            </button>
           </div>
         </form>
+
+        <ForgotPasswordDialog open={forgotOpen} onOpenChange={setForgotOpen} />
 
         <p className="text-center text-xs text-gh-soft mt-6">
           <a href="/" className="hover:text-gh-primary">

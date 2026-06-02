@@ -15,6 +15,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { QuoteDialog } from "@/components/QuoteDialog";
 import Login from "@/pages/Login";
+import ResetPassword from "@/pages/ResetPassword";
 import Dashboard from "@/pages/Dashboard";
 
 const Landing = () => {
@@ -50,6 +51,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
               <Route
                 path="/dashboard"
                 element={

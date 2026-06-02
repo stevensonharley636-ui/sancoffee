@@ -1,12 +1,22 @@
 import os
+import asyncio
+import logging
+import secrets
 import bcrypt
 import jwt
+import resend
 from datetime import datetime, timezone, timedelta
+from typing import Optional
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, EmailStr, Field
 from bson import ObjectId
 
 from database import db
+
+logger = logging.getLogger(__name__)
+
+resend.api_key = os.environ.get("RESEND_API_KEY")
+RESET_SENDER = os.environ.get("SENDER_EMAIL", "onboarding@resend.dev")
 
 JWT_ALGORITHM = "HS256"
 ACCESS_TOKEN_MINUTES = 60 * 12  # 12 hours
@@ -105,6 +115,77 @@ async def change_password(payload: ChangePasswordRequest, request: Request):
         {"$set": {"password_hash": hash_password(payload.new_password), "password_changed": True}},
     )
     return {"status": "success", "message": "Password updated successfully."}
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+    base_url: Optional[str] = None
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+@router.post("/forgot-password")
+async def forgot_password(payload: ForgotPasswordRequest):
+    email = payload.email.lower().strip()
+    generic = {"status": "success", "message": "If an account exists for that email, a reset link has been sent."}
+    user = await db.users.find_one({"email": email})
+    if not user:
+        return generic
+
+    token = secrets.token_urlsafe(32)
+    await db.password_reset_tokens.insert_one({
+        "token": token,
+        "email": email,
+        "used": False,
+        "expires_at": datetime.now(timezone.utc) + timedelta(hours=1),
+        "created_at": datetime.now(timezone.utc),
+    })
+
+    base = (payload.base_url or "").rstrip("/")
+    if not base.startswith("http"):
+        base = ""
+    reset_link = f"{base}/reset-password?token={token}"
+    logger.info(f"[password-reset] reset link for {email}: {reset_link}")
+
+    html = f"""
+    <div style="font-family: Arial, sans-serif; max-width: 560px; margin: 0 auto; padding: 24px; background:#F9F8F6; color:#1A1A1A;">
+      <h2 style="color:#2D4A32; margin:0 0 12px 0;">Reset your password</h2>
+      <p style="font-size:14px; line-height:1.6;">We received a request to reset your Green-Haus dashboard password. This link expires in 1 hour.</p>
+      <p style="margin:24px 0;"><a href="{reset_link}" style="background:#2D4A32; color:#fff; padding:12px 22px; text-decoration:none; font-size:14px;">Reset password</a></p>
+      <p style="font-size:12px; color:#595959;">If you didn't request this, you can safely ignore this email. Or copy this link: {reset_link}</p>
+    </div>
+    """
+    try:
+        await asyncio.to_thread(resend.Emails.send, {
+            "from": RESET_SENDER,
+            "to": [email],
+            "subject": "Reset your Green-Haus dashboard password",
+            "html": html,
+        })
+    except Exception as e:
+        logger.error(f"Password reset email failed: {e}")
+    return generic
+
+
+@router.post("/reset-password")
+async def reset_password(payload: ResetPasswordRequest):
+    doc = await db.password_reset_tokens.find_one({"token": payload.token})
+    if not doc or doc.get("used"):
+        raise HTTPException(status_code=400, detail="Invalid or already-used reset link.")
+    expires = doc["expires_at"]
+    if expires.tzinfo is None:
+        expires = expires.replace(tzinfo=timezone.utc)
+    if expires < datetime.now(timezone.utc):
+        raise HTTPException(status_code=400, detail="This reset link has expired. Please request a new one.")
+    await db.users.update_one(
+        {"email": doc["email"]},
+        {"$set": {"password_hash": hash_password(payload.new_password), "password_changed": True}},
+    )
+    await db.password_reset_tokens.update_one({"_id": doc["_id"]}, {"$set": {"used": True}})
+    return {"status": "success", "message": "Password reset successfully. You can now sign in."}
 
 
 async def seed_admin():
