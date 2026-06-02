@@ -1,14 +1,16 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ExternalLink, LogOut } from "lucide-react";
+import { ExternalLink, LogOut, KeyRound } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
 import ContentEditor from "../components/dashboard/ContentEditor";
 import ProductsManager from "../components/dashboard/ProductsManager";
+import ChangePasswordDialog from "../components/dashboard/ChangePasswordDialog";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [pwdOpen, setPwdOpen] = React.useState(false);
 
   const handleLogout = () => {
     logout();
@@ -32,12 +34,17 @@ export default function Dashboard() {
             <a href="/" target="_blank" rel="noreferrer" data-testid="dashboard-view-site" className="gh-btn-secondary !py-2 !px-4 !text-xs">
               <ExternalLink size={14} /> View site
             </a>
+            <button data-testid="dashboard-change-password" onClick={() => setPwdOpen(true)} className="gh-btn-ghost !py-2 !px-4 !text-xs">
+              <KeyRound size={14} /> Password
+            </button>
             <button data-testid="dashboard-logout" onClick={handleLogout} className="gh-btn-ghost !py-2 !px-4 !text-xs">
               <LogOut size={14} /> Logout
             </button>
           </div>
         </div>
       </header>
+
+      <ChangePasswordDialog open={pwdOpen} onOpenChange={setPwdOpen} />
 
       <main className="max-w-5xl mx-auto px-6 sm:px-8 py-10">
         <h1 className="font-serif-display text-gh-primary text-3xl sm:text-4xl mb-8">

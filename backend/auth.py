@@ -3,7 +3,7 @@ import bcrypt
 import jwt
 from datetime import datetime, timezone, timedelta
 from fastapi import APIRouter, HTTPException, Request
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from bson import ObjectId
 
 from database import db
@@ -87,6 +87,26 @@ async def me(request: Request):
     return {"id": user["_id"], "email": user["email"], "name": user.get("name"), "role": user.get("role")}
 
 
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str = Field(min_length=8, max_length=128)
+
+
+@router.post("/change-password")
+async def change_password(payload: ChangePasswordRequest, request: Request):
+    user = await get_current_user(request)
+    db_user = await db.users.find_one({"_id": ObjectId(user["_id"])})
+    if not db_user or not verify_password(payload.current_password, db_user["password_hash"]):
+        raise HTTPException(status_code=400, detail="Current password is incorrect.")
+    if payload.current_password == payload.new_password:
+        raise HTTPException(status_code=400, detail="New password must be different from the current password.")
+    await db.users.update_one(
+        {"_id": db_user["_id"]},
+        {"$set": {"password_hash": hash_password(payload.new_password), "password_changed": True}},
+    )
+    return {"status": "success", "message": "Password updated successfully."}
+
+
 async def seed_admin():
     email = os.environ.get("ADMIN_EMAIL", "").lower().strip()
     password = os.environ.get("ADMIN_PASSWORD", "")
@@ -101,5 +121,6 @@ async def seed_admin():
             "role": "editor",
             "created_at": datetime.now(timezone.utc).isoformat(),
         })
-    elif not verify_password(password, existing["password_hash"]):
+    elif not existing.get("password_changed") and not verify_password(password, existing["password_hash"]):
+        # Only re-sync from env if the editor has NOT set their own password via the dashboard.
         await db.users.update_one({"email": email}, {"$set": {"password_hash": hash_password(password)}})
