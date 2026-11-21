@@ -1,2 +1,5 @@
 /* Reserved for component-specific overrides if needed */
 .App { min-height: 100vh; }
+
+/* Hide Netlify badge */
+[data-netlify-badge], .netlify-badge, #netlify-badge, a[href*="netlify.com"][style*="position:fixed"] { display: none !important; }
