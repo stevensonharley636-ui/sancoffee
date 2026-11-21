@@ -1,10 +1,12 @@
 import React from "react";
-import axios from "axios";
 import { Mail, MapPin, Phone, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useContent } from "../context/ContentContext";
 
-const API = `${process.env.REACT_APP_BACKEND_URL}/api`;
+const encode = (data) =>
+  Object.keys(data)
+    .map((key) => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
+    .join("&");
 
 export const Contact = () => {
   const { contact } = useContent();
@@ -21,12 +23,15 @@ export const Contact = () => {
     }
     setLoading(true);
     try {
-      const { data } = await axios.post(`${API}/contact`, form);
-      toast.success(data.message || "Message sent.");
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({ "form-name": "contact", ...form }),
+      });
+      toast.success("Message sent! We'll be in touch soon.");
       setForm({ name: "", email: "", message: "" });
-    } catch (err) {
-      const detail = err?.response?.data?.detail || "Could not send. Please try again.";
-      toast.error(detail);
+    } catch {
+      toast.error("Could not send. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -52,7 +57,6 @@ export const Contact = () => {
           <p className="mt-6 text-gh-soft text-base sm:text-lg leading-relaxed max-w-md">
             {contact.intro}
           </p>
-
           <ul className="mt-10 space-y-6 text-sm sm:text-base">
             <li className="flex items-start gap-4" data-testid="contact-address">
               <MapPin size={18} className="mt-1 text-gh-primary" />
@@ -80,16 +84,21 @@ export const Contact = () => {
         </div>
 
         <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
           onSubmit={submit}
           data-testid="contact-form"
           className="bg-gh-surface border border-gh-border p-8 sm:p-10"
         >
+          <input type="hidden" name="form-name" value="contact" />
           <div className="space-y-5">
             <div>
               <label className="label-overline block mb-2">Name</label>
               <input
                 data-testid="contact-input-name"
                 className="gh-input"
+                name="name"
                 value={form.name}
                 onChange={update("name")}
                 placeholder="Your name"
@@ -102,6 +111,7 @@ export const Contact = () => {
                 data-testid="contact-input-email"
                 className="gh-input"
                 type="email"
+                name="email"
                 value={form.email}
                 onChange={update("email")}
                 placeholder="you@example.com"
@@ -113,6 +123,7 @@ export const Contact = () => {
               <textarea
                 data-testid="contact-input-message"
                 className="gh-input"
+                name="message"
                 value={form.message}
                 onChange={update("message")}
                 placeholder="How can we help?"
